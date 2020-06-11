@@ -1,0 +1,197 @@
+﻿<Window x:Class="SMAShareXCaptureOptions.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SMAShareXCaptureOptions"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
+        mc:Ignorable="d"
+        Title="SMA ShareX Capture Options"
+        Height="550"
+        Width="450"
+        MaxWidth="450">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="140"></RowDefinition>
+            <RowDefinition Height="200"></RowDefinition>
+            <RowDefinition Height="120*"></RowDefinition>
+            <RowDefinition Height="30"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="95"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Media Information:"
+                       FontWeight="Bold"
+                       Margin="5"
+                       Height="15">
+            </TextBlock>
+
+            <!-- DataGrid -->
+            <DataGrid Margin="5"
+                      Grid.Row="1"
+                      Name="DG1"
+                      Width="170"
+                      RowHeight="350"
+                      IsReadOnly="True"
+                      AutoGenerateColumns="False">
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="IsHitTestVisible" Value="False"/>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.Resources>
+                    <Style x:Key="DataGridBase" TargetType="Control">
+                        <Setter Property="LayoutTransform">
+                            <Setter.Value>
+                                <TransformGroup>
+                                    <RotateTransform Angle="-90" />
+                                    <ScaleTransform ScaleX="1" ScaleY="-1" />
+                                </TransformGroup>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
+                    </Style >
+                    <Style TargetType="DataGridCell" BasedOn="{StaticResource DataGridBase}"/>
+                    <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource DataGridBase}"/>
+                    <Style TargetType="DataGridRowHeader" BasedOn="{StaticResource DataGridBase}"/>
+                </DataGrid.Resources>
+                <DataGrid.LayoutTransform>
+                    <TransformGroup>
+                        <RotateTransform Angle="90" />
+                        <MatrixTransform Matrix="-1, 0, 0, 1, 0, 0" />
+                    </TransformGroup>
+                </DataGrid.LayoutTransform>
+                <DataGrid.Columns>
+
+                    <!-- File -->
+                    <DataGridTemplateColumn Header="Filepath">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding File}" 
+                                           Margin="5"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!-- MediaType -->
+                    <DataGridTemplateColumn Header="Media Type">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding MediaType}"
+                                           Margin="5"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!-- MediaExtension -->
+                    <DataGridTemplateColumn Header="Extension">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding MediaExtension}" 
+                                           Margin="5"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+        <!-- Media Preview -->
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Media Preview:"
+                       FontWeight="Bold"
+                       Margin="5">
+            </TextBlock>
+            <StackPanel Orientation="Vertical"
+                        Grid.Row="1">
+                <ScrollViewer Margin="5">
+                    <Grid>
+                        <Image Name="ImageBox"
+                               Margin="5"
+                               Source="{Binding File}"
+                               MaxWidth="400">
+                        </Image>
+                        <Image Name="GifBox"
+                               MaxWidth="400"
+                               Margin="5"
+                               gif:ImageBehavior.AnimatedSource="{Binding File}" />
+                    </Grid>
+                </ScrollViewer>
+                <MediaElement Name="MediaPlayer" Source="{Binding File}"></MediaElement>
+                <StackPanel Orientation="Horizontal"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center">
+                    <Button Content="Play"
+                            Margin="5"
+                            Visibility="Hidden"/>
+                    <Button Content="Pause"
+                            Margin="5"
+                            Visibility="Hidden"/>
+                    <Button Content="Stop"
+                            Margin="5"
+                            Visibility="Hidden"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="13*"/>
+                <ColumnDefinition Width="21*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="5*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Text="SuperMemo Options" 
+                       FontWeight="Bold"
+                       Margin="5" Grid.ColumnSpan="2">
+            </TextBlock>
+            <StackPanel Orientation="Vertical"
+                        Grid.Row="1" Grid.ColumnSpan="2">
+                <TextBlock Text="Comment (Optional):"
+                           Margin="5">
+                </TextBlock>
+                <TextBox Margin="5"
+                         Height="40"
+                         TabIndex="0"
+                         TextWrapping="Wrap"
+                         AcceptsReturn="True">
+                </TextBox>
+                <TextBlock Text="Priority (0-100%): "
+                           Margin="5">
+                </TextBlock>
+                <Slider Maximum="100"
+                        PreviewKeyDown="PrioritySlider_PreviewKeyDown"
+                        Minimum="0"
+                        Value="15"
+                        Margin="5"
+                        TickPlacement="BottomRight"
+                        TickFrequency="2"
+                        Name="PrioritySlider"
+                        TabIndex="1"/>
+            </StackPanel>
+        </Grid>
+        <!-- Buttons -->
+        <Grid Grid.Row="3">
+            <Button Content=" EXTRACT "
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Click="Button_Click"
+                    TabIndex="2"
+                    Margin="5"/>
+
+            <Button Content=" CANCEL "
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Click="Button_Click_1"
+                    TabIndex="3"
+                    Margin="5"/>
+        </Grid>
+    </Grid>
+</Window>
